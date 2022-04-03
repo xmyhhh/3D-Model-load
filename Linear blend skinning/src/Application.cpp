@@ -75,7 +75,7 @@ int main(void)
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
 	Shader modelShader("res/shaders/model_vs.hlsl", "res/shaders/model_fs.hlsl");
-	Shader lampShader("res/shaders/lamp.vs", "res/shaders/lamp.fs");
+
 	Shader skeletonShader("res/shaders/skeleton.vs", "res/shaders/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
@@ -89,8 +89,7 @@ int main(void)
 	//Model aModel("res/object/body/groo.fbx");
 	//Model aModel("res/object/body/sk2_leafbone.fbx");
 
-	//				lamp position					light color
-	Lamp lamp(glm::vec3(1.2f, 1.0f, 2.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
 
 
 	float startFrame = glfwGetTime();
@@ -126,36 +125,21 @@ int main(void)
 		modelShader.setMat4("projection", projection);
 		glm::mat4 view = camera.GetViewMatrix();
 		modelShader.setMat4("view", view);
-		glm::mat4 model= glm::mat4(1.0f);
-		//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
 		modelShader.setMat4("model", model);
-		/*aModel.BoneTransform(animationTime, Transforms);
+		aModel.BoneTransform(animationTime, Transforms);
 		for (unsigned int i = 0; i < Transforms.size(); ++i)
 		{
 			const std::string name = "gBones[" + std::to_string(i) + "]";
 			GLuint boneTransform = glGetUniformLocation(modelShader.ID, name.c_str());
 			glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
-		}*/
+		}
 		//set uniforms for model shader
-		modelShader.setVec3("lightPos", lamp.Position);
-		modelShader.setVec3("lightColor", lamp.Color);
+
 		modelShader.setVec3("viewPos", camera.Position);
 
 		aModel.Draw(modelShader);
-
-		//activate lamp shader
-		//render light cube(lamp)
-		//lamp.Position.x = 1.0f + sin(glfwGetTime()) * 2.0f;
-		lampShader.use();
-		lampShader.setMat4("projection", projection);
-		lampShader.setMat4("view", view);
-		glm::mat4 lamp_cube;
-		//lamp_cube = glm::rotate(lamp_cube, (float)glfwGetTime(), glm::vec3(0.0, 1.0, 0.0));
-		lamp_cube = glm::translate(lamp_cube, lamp.Position);
-		lamp_cube = glm::scale(lamp_cube, glm::vec3(0.2f));	// it's a bit too big for our scene, so scale it down
-		//set uniforms for lamp shader
-		lampShader.setMat4("model", lamp_cube);
-		lamp.Draw(lampShader);
 
 		//activate skeleton shader
 		//Skeleton skeleton(aModel.skeleton_pose);
