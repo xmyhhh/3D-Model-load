@@ -37,20 +37,20 @@ struct Texture {
 	string path;
 };
 
-struct MeshEntry {
-	MeshEntry()
-	{
-		Mesh_Index = 0;
-		Num_Bones = 0;
-		BaseVertex = 0;
-		BaseIndices = 0;
-	}
-
-	unsigned int Mesh_Index;
-	unsigned int Num_Bones;
-	unsigned int BaseVertex;
-	unsigned int BaseIndices;
-};
+//struct MeshEntry {
+//	MeshEntry()
+//	{
+//		Mesh_Index = 0;
+//		Num_Bones = 0;
+//		BaseVertex = 0;
+//		BaseIndices = 0;
+//	}
+//
+//	unsigned int Mesh_Index;
+//	unsigned int Num_Bones;
+//	unsigned int BaseVertex;
+//	unsigned int BaseIndices;
+//};
 
 
 struct BoneInfo {
@@ -185,12 +185,7 @@ private:
 		// vertex texture coords
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-		// vertex tangent
-		//glEnableVertexAttribArray(3);
-		//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-		// vertex bitangent
-		//glEnableVertexAttribArray(4);
-		//glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBones_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexBoneData) * vertexBoneData.size(), &vertexBoneData[0], GL_STATIC_DRAW);
@@ -202,3 +197,4 @@ private:
 		glBindVertexArray(0);
 	}
 };
+
