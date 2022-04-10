@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Lamp.h"
-#include "Skeleton.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -134,17 +133,6 @@ int main(void)
 		modelShader.setVec3("viewPos", camera.Position);
 
 		aModel.Draw(modelShader);
-
-		//activate skeleton shader
-		//Skeleton skeleton(aModel.skeleton_pose);
-
-		//skeletonShader.use();
-		//skeletonShader.setMat4("projection", projection);
-		//skeletonShader.setMat4("view", view);
-		//glm::mat4 skeletom_model;
-		//skeletom_model = glm::scale(skeletom_model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
-		//skeletonShader.setMat4("model", skeletom_model);
-		//skeleton.Draw(skeletonShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

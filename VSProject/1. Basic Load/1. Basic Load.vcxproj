@@ -148,14 +148,11 @@
     <ClInclude Include="code\include\Mesh.h" />
     <ClInclude Include="code\include\Model.h" />
     <ClInclude Include="code\include\Shader.h" />
-    <ClInclude Include="code\include\Skeleton.h" />
     <ClInclude Include="code\include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code\shader\model.fs" />
     <None Include="code\shader\model.vs" />
-    <None Include="code\shader\skeleton.fs" />
-    <None Include="code\shader\skeleton.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

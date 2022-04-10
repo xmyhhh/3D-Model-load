@@ -20,18 +20,13 @@
 #include "assimp/postprocess.h"
 
 
-
-
 using std::string;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
-
 class Model
 {
 public:
-
-
 	vector<Texture> textures_loaded;	
 	vector<Mesh> meshes;
 	string directory;
@@ -74,7 +69,6 @@ private:
 	{
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
-
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 			meshes.push_back(Mesh(mesh, scene, textures_loaded, directory));
