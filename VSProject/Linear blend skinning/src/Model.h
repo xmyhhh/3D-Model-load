@@ -19,16 +19,21 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 
 using std::string;
 
+unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
+void debuggingMatrix(glm::mat4 array);
+void debugVertexBoneData(unsigned int total_vertices, vector<VertexBoneData> Bones);
+void debugSkeletonPose(map<unsigned int, glm::vec3> skeletonPos);
 class Model
 {
 public:
-	
+
 	/*  Model Data */
 	vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 	vector<Mesh> meshes;
@@ -36,7 +41,7 @@ public:
 	bool gammaCorrection;
 
 	unsigned int total_vertices = 0;
-	
+
 	/*Bone Data*/
 	unsigned int m_NumBones = 0;
 	vector<VertexBoneData> Bones;   //用来存储每个顶点和Bone之间的权重
@@ -52,9 +57,9 @@ public:
 
 	/*  Functions   */
 	// constructor, expects a filepath to a 3D model.
-	Model(string const &path, bool gamma = false) : gammaCorrection(gamma)
+	Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
 	{
-		loadModel(path);	
+		loadModel(path);
 	}
 
 	// draws the model, and thus all its meshes
@@ -76,21 +81,21 @@ public:
 		float AnimationTime = fmod(TimeInTicks, scene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime);
 
 		ReadNodeHeirarchy(scene, AnimationTime, scene->mRootNode, Identity, glm::vec3(0.0f, 0.0f, 0.0f));
-		
+
 		//debugSkeletonPose(skeleton_pose);
-		
+
 		Transforms.resize(m_NumBones);
 
 		for (unsigned int i = 0; i < m_NumBones; i++) {
 			Transforms[i] = m_BoneInfo[i].FinalTransformation;
 		}
 	}
-	
+
 private:
 	const aiScene* scene;
 	Assimp::Importer importer;
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-	void loadModel(string const &path)
+	void loadModel(string const& path)
 	{
 		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		// check for errors
@@ -108,7 +113,7 @@ private:
 		processNode(scene->mRootNode, scene);
 	}
 
-	void loadBones(aiNode *node, const aiScene *scene)
+	void loadBones(aiNode* node, const aiScene* scene)
 	{
 		for (unsigned int i = 0; i < node->mNumChildren; i++) {
 			string NodeName(node->mChildren[i]->mName.data);
@@ -133,26 +138,26 @@ private:
 					Bone_Mapping[BoneName] = BoneIndex;
 				}
 			}*/
-			
+
 		}
-		
+
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
 			loadBones(node->mChildren[i], scene);
 		}
 
-		
+
 	}
 
 	// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
-	void processNode(aiNode *node, const aiScene *scene)
+	void processNode(aiNode* node, const aiScene* scene)
 	{
 		// process each mesh located at the current node
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			// the node object only contains indices to index the actual objects in the scene. 
 			// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-			
+
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			total_vertices += mesh->mNumVertices;
 			meshes.push_back(processMesh(mesh, scene));
@@ -166,7 +171,7 @@ private:
 	}
 
 	// process a mesh object
-	Mesh processMesh(aiMesh *mesh, const aiScene *scene)
+	Mesh processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		// data to fill
 		vector<Vertex> vertices;
@@ -192,7 +197,7 @@ private:
 			vector.y = mesh->mNormals[i].y;
 			vector.z = mesh->mNormals[i].z;
 			vertex.Normal = vector;
-			
+
 			//retreive texture coordinates
 			if (mesh->mTextureCoords[0])
 			{
@@ -206,7 +211,7 @@ private:
 			}
 			vertices.push_back(vertex);
 		}
-		
+
 		//retreive indices
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
@@ -217,7 +222,7 @@ private:
 
 		if (mesh->mMaterialIndex >= 0)
 		{
-			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
 			// 1. diffuse maps 漫反射贴图
 			vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
@@ -232,9 +237,9 @@ private:
 			std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
 			textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 		}
-		
-		
-		
+
+
+
 		//retreive bone information
 		loadMeshBones(mesh, Bones);
 		// return a mesh object created from the extracted mesh data
@@ -243,7 +248,7 @@ private:
 
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
-	vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName)
+	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
 	{
 		vector<Texture> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -274,10 +279,10 @@ private:
 		return textures;
 	}
 
-	void loadMeshBones(aiMesh *mesh, vector<VertexBoneData>& VertexBoneData) 
-	{		
-		for (unsigned int i = 0; i < mesh->mNumBones; i++) 
-		{	
+	void loadMeshBones(aiMesh* mesh, vector<VertexBoneData>& VertexBoneData)
+	{
+		for (unsigned int i = 0; i < mesh->mNumBones; i++)
+		{
 			unsigned int BoneIndex = 0;
 			string BoneName(mesh->mBones[i]->mName.data);
 
@@ -290,7 +295,7 @@ private:
 				aiMatrix4x4 tp1 = mesh->mBones[i]->mOffsetMatrix;
 				m_BoneInfo[BoneIndex].offset = glm::transpose(glm::make_mat4(&tp1.a1));
 			}
-			
+
 
 			for (unsigned int n = 0; n < mesh->mBones[i]->mNumWeights; n++) {
 				unsigned int vid = mesh->mBones[i]->mWeights[n].mVertexId + NumVertices;//absolute index
@@ -301,10 +306,10 @@ private:
 		}
 		NumVertices += mesh->mNumVertices;
 	}
-	
+
 	//get animation from the bone
 	//populate the animation map : animation_map[animation_name][bone_name] -> animation
-	void loadAnimations(const aiScene *scene, string BoneName, map<string, map<string, const aiNodeAnim*>>& animations)
+	void loadAnimations(const aiScene* scene, string BoneName, map<string, map<string, const aiNodeAnim*>>& animations)
 	{
 		for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
 			const aiAnimation* pAnimation = scene->mAnimations[i];
@@ -318,7 +323,7 @@ private:
 		}
 	}
 
-	void ReadNodeHeirarchy(	const aiScene *scene, float AnimationTime, const aiNode* pNode,
+	void ReadNodeHeirarchy(const aiScene* scene, float AnimationTime, const aiNode* pNode,
 		const glm::mat4& ParentTransform, glm::vec3 startpos)
 	{
 		string NodeName(pNode->mName.data);
@@ -327,7 +332,7 @@ private:
 
 		aiMatrix4x4 tp1 = pNode->mTransformation;
 		NodeTransformation = glm::transpose(glm::make_mat4(&tp1.a1));
-			
+
 		const aiNodeAnim* pNodeAnim = nullptr;
 		pNodeAnim = Animations[pAnimation->mName.data][NodeName];
 		if (pNodeAnim) {
@@ -352,14 +357,14 @@ private:
 			TranslationM = glm::translate(TranslationM, glm::vec3(Translation.x, Translation.y, Translation.z));
 
 			NodeTransformation = TranslationM * RotationM * ScalingM;
-			
+
 		}
 
 		glm::mat4 GlobalTransformation = ParentTransform * NodeTransformation;
 
 
 		unsigned int ID = 0;
-		
+
 
 		if (Bone_Mapping.find(NodeName) != Bone_Mapping.end()) {
 			startpos.x = GlobalTransformation[3][0];
@@ -372,12 +377,12 @@ private:
 		//if we find the node in the bone_map
 		if (Bone_Mapping.find(NodeName) != Bone_Mapping.end()) {
 			unsigned int NodeIndex = Bone_Mapping[NodeName];
-			m_BoneInfo[NodeIndex].FinalTransformation = GlobalTransformation * m_BoneInfo[NodeIndex].offset;	
+			m_BoneInfo[NodeIndex].FinalTransformation = GlobalTransformation * m_BoneInfo[NodeIndex].offset;
 		}
 		for (unsigned int i = 0; i < pNode->mNumChildren; i++) {
 			ReadNodeHeirarchy(scene, AnimationTime, pNode->mChildren[i], GlobalTransformation, startpos);
 		}
-	}	
+	}
 
 
 	void CalcInterpolatedScaling(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -420,7 +425,7 @@ private:
 	}
 
 	void CalcInterpolatedPosition(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-	{	
+	{
 		if (pNodeAnim->mNumPositionKeys == 1) {
 			Out = pNodeAnim->mPositionKeys[0].mValue;
 			return;
@@ -475,3 +480,85 @@ private:
 		return 0;
 	}
 };
+
+//Helpers
+unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
+{
+	string filename = string(path);
+	filename = directory + '/' + filename;
+
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+	if (data)
+	{
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		stbi_image_free(data);
+	}
+
+	return textureID;
+}
+
+//Debuggers
+void debuggingMatrix(glm::mat4 array)
+{
+	for (int r = 0; r < 4; ++r)
+	{
+		for (int c = 0; c < 4; ++c)
+		{
+			std::cout << array[r][c] << "  ";
+		}
+
+		std::cout << std::endl;
+	}
+}
+
+void debugVertexBoneData(unsigned int total_vertices, vector<VertexBoneData> Bones)
+{
+	std::ofstream log;
+	log.open("VertexBoneData.txt");
+
+
+	unsigned int i, j;
+	for (i = 0; i < total_vertices; i++)
+	{
+		log << "\nBone[" << Bones[i].BoneIDs[0] << "], weight= " << Bones[i].Weights[0];
+		log << "\nBone[" << Bones[i].BoneIDs[1] << "], weight= " << Bones[i].Weights[1];
+		log << "\nBone[" << Bones[i].BoneIDs[2] << "], weight= " << Bones[i].Weights[2];
+		log << "\nBone[" << Bones[i].BoneIDs[3] << "], weight= " << Bones[i].Weights[3];
+		log << "---------------\n";
+	}
+
+	log.close();
+}
+
+void debugSkeletonPose(map<unsigned int, glm::vec3> skeletonPos) {
+	for (auto it = skeletonPos.cbegin(); it != skeletonPos.cend(); ++it)
+	{
+		std::cout << it->first << " " << it->second.x << " " << it->second.y << " " << it->second.z << "\n";
+	}
+}
+

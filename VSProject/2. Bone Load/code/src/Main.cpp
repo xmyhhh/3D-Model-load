@@ -5,7 +5,6 @@
 #include "Camera.h"
 #include "Model.h"
 #include "Lamp.h"
-#include "Skeleton.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -43,7 +42,7 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Master 2018", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "1. Basic Load", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -74,18 +73,18 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_PROGRAM_POINT_SIZE);
 
-	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs");
+	Shader modelShader("./code/shader/model.vs", "./code/shader/model.fs");
 
-	Shader skeletonShader("res/shaders/skeleton.vs", "res/shaders/skeleton.fs");
+	Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
-	//Model aModel("res/object/body/skinning_test_2.fbx");
+	//Model aModel("../../res/object/body/skinning_test_2.fbx");
 	//Model aModel("res/object/body/skinning_test.fbx");
 	//Model aModel("res/object/body/skinning_test_3.fbx");
 	//Model aModel("res/object/body/silly_dance.fbx");
 	//Model aModel("res/object/body/Mannequin_Animation.fbx");
 	//Model aModel("res/object/body/turtle_texture.fbx");
-	Model aModel("res/object/cylinder/leafbone.fbx");
+	 Model aModel("../../Resource/object/cylinder/leafbone.fbx");
 	//Model aModel("res/object/body/groo.fbx");
 	//Model aModel("res/object/body/sk2_leafbone.fbx");
 
@@ -108,49 +107,32 @@ int main(void)
 		processInput(window);
 		wireframeMode(window);
 
-		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//wireframe mode for debugging
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 
 		//activate model shader
-		// render 3D model
-		modelShader.use(); //3d model shader
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+		modelShader.use();
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		// view/projection transformations
 		modelShader.setMat4("projection", projection);
 		glm::mat4 view = camera.GetViewMatrix();
 		modelShader.setMat4("view", view);
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
-		modelShader.setMat4("model", model);
-		aModel.BoneTransform(animationTime, Transforms);
-		for (unsigned int i = 0; i < Transforms.size(); ++i)
-		{
-			const std::string name = "gBones[" + std::to_string(i) + "]";
-			GLuint boneTransform = glGetUniformLocation(modelShader.ID, name.c_str());
-			glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
-		}
-		//set uniforms for model shader
 
+		// world transformation
+		glm::mat4 model = glm::mat4(1.0f);
+		modelShader.setMat4("model", model);
+
+		//set uniforms for model shader
 		modelShader.setVec3("viewPos", camera.Position);
 
 		aModel.Draw(modelShader);
-
-		//activate skeleton shader
-		//Skeleton skeleton(aModel.skeleton_pose);
-
-		//skeletonShader.use();
-		//skeletonShader.setMat4("projection", projection);
-		//skeletonShader.setMat4("view", view);
-		//glm::mat4 skeletom_model;
-		//skeletom_model = glm::scale(skeletom_model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
-		//skeletonShader.setMat4("model", skeletom_model);
-		//skeleton.Draw(skeletonShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

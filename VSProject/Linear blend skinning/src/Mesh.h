@@ -28,12 +28,12 @@ struct Vertex {
 	glm::vec3 Tangent;
 	// bitangent
 	glm::vec3 Bitangent;
-	
+
 };
 
 struct Texture {
 	unsigned int id;
-	string type; 
+	string type;
 	string path;
 };
 
@@ -81,7 +81,7 @@ struct VertexBoneData {
 			Weights[i] = 0;
 		}
 	}
-	
+
 	void AddBoneData(unsigned int BoneID, float Weight)
 	{
 		for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; i++) {
@@ -102,7 +102,7 @@ public:
 	vector<Texture> textures;
 	vector<BoneInfo> bones;
 	vector<VertexBoneData> vertexBoneData;
-	
+
 	// constructor
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, vector<BoneInfo> bones, vector<VertexBoneData> vertexBoneData) {
 		this->vertices = vertices;

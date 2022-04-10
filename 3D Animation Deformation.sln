@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1. Basic Load", "VSProject\1. Basic Load\1. Basic Load.vcxproj", "{36D1D128-7E51-4237-BDAC-85F17BC210D5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2. Bone Load", "VSProject\2. Bone Load\2. Bone Load.vcxproj", "{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Linear blend skinning", "VSProject\Linear blend skinning\Linear blend skinning.vcxproj", "{9E61370F-5731-4B0C-BC8F-0875898102DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,22 @@ Global
 		{36D1D128-7E51-4237-BDAC-85F17BC210D5}.Release|x64.Build.0 = Release|x64
 		{36D1D128-7E51-4237-BDAC-85F17BC210D5}.Release|x86.ActiveCfg = Release|Win32
 		{36D1D128-7E51-4237-BDAC-85F17BC210D5}.Release|x86.Build.0 = Release|Win32
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Debug|x64.ActiveCfg = Debug|x64
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Debug|x64.Build.0 = Debug|x64
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Debug|x86.ActiveCfg = Debug|Win32
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Debug|x86.Build.0 = Debug|Win32
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Release|x64.ActiveCfg = Release|x64
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Release|x64.Build.0 = Release|x64
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Release|x86.ActiveCfg = Release|Win32
+		{7979C3C9-4173-4E5F-A5CB-BF2DE71E8A83}.Release|x86.Build.0 = Release|Win32
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Debug|x64.ActiveCfg = Debug|x64
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Debug|x64.Build.0 = Debug|x64
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Debug|x86.ActiveCfg = Debug|Win32
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Debug|x86.Build.0 = Debug|Win32
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x64.ActiveCfg = Release|x64
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x64.Build.0 = Release|x64
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x86.ActiveCfg = Release|Win32
+		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
