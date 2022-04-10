@@ -19,17 +19,12 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+
 
 
 using std::string;
 
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
 
-void debuggingMatrix(glm::mat4 array);
-void debugVertexBoneData(unsigned int total_vertices, vector<VertexBoneData> Bones);
-void debugSkeletonPose(map<unsigned int, glm::vec3> skeletonPos);
 class Model
 {
 public:
@@ -480,86 +475,3 @@ private:
 		return 0;
 	}
 };
-
-//Helpers
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
-{
-	string filename = string(path);
-	filename = directory + '/' + filename;
-
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
-	}
-
-	return textureID;
-}
-
-//Debuggers
-void debuggingMatrix(glm::mat4 array)
-{
-	for (int r = 0; r < 4; ++r)
-	{
-		for (int c = 0; c < 4; ++c)
-		{
-			std::cout << array[r][c] << "  ";
-		}
-
-		std::cout << std::endl;
-	}
-}
-
-void debugVertexBoneData(unsigned int total_vertices, vector<VertexBoneData> Bones)
-{
-	std::ofstream log;
-	log.open("VertexBoneData.txt");
-	
-
-	unsigned int i, j;
-	for (i = 0; i < total_vertices; i++)
-	{
-		log << "\nBone[" << Bones[i].BoneIDs[0] << "], weight= " << Bones[i].Weights[0];
-		log << "\nBone[" << Bones[i].BoneIDs[1] << "], weight= " << Bones[i].Weights[1];
-		log << "\nBone[" << Bones[i].BoneIDs[2] << "], weight= " << Bones[i].Weights[2];
-		log << "\nBone[" << Bones[i].BoneIDs[3] << "], weight= " << Bones[i].Weights[3];
-		log << "---------------\n";
-	}
-
-	log.close();
-}
-
-void debugSkeletonPose(map<unsigned int, glm::vec3> skeletonPos) {
-	for (auto it = skeletonPos.cbegin(); it != skeletonPos.cend(); ++it)
-	{
-		std::cout << it->first << " " << it->second.x << " " << it->second.y << " " << it->second.z <<"\n";
-	}
-}
-
-	
