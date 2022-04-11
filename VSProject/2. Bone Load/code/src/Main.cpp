@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Lamp.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -75,16 +75,16 @@ int main(void)
 
 	Shader modelShader("./code/shader/model.vs", "./code/shader/model.fs");
 
-	Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
+	//Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
-	//Model aModel("../../res/object/body/skinning_test_2.fbx");
+	Model aModel("../../Resource/object/body/skinning_test_2.fbx");
 	//Model aModel("res/object/body/skinning_test.fbx");
 	//Model aModel("res/object/body/skinning_test_3.fbx");
 	//Model aModel("res/object/body/silly_dance.fbx");
 	//Model aModel("res/object/body/Mannequin_Animation.fbx");
 	//Model aModel("res/object/body/turtle_texture.fbx");
-	 Model aModel("../../Resource/object/cylinder/leafbone.fbx");
+	 //Model aModel("../../Resource/object/cylinder/leafbone.fbx");
 	//Model aModel("res/object/body/groo.fbx");
 	//Model aModel("res/object/body/sk2_leafbone.fbx");
 
@@ -127,6 +127,7 @@ int main(void)
 
 		// world transformation
 		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
 		modelShader.setMat4("model", model);
 
 		//set uniforms for model shader

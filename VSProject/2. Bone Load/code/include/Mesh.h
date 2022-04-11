@@ -32,7 +32,35 @@ struct Vertex {
 	glm::vec3 Tangent;
 	// bitangent
 	glm::vec3 Bitangent;
+	//bone indexes which will influence this vertex
+	int m_BoneIDs[NUM_BONES_PER_VERTEX];
+	//weights from each bone
+	float m_Weights[NUM_BONES_PER_VERTEX];
 
+	Vertex()
+	{
+		Reset();
+	};
+
+	void Reset()
+	{
+		for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; ++i)
+		{
+			m_BoneIDs[i] = 0;
+			m_Weights[i] = 0;
+		}
+	}
+
+	void AddBoneData(unsigned int BoneID, float Weight)
+	{
+		for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; i++) {
+			if (m_Weights[i] == 0.0) {
+				m_BoneIDs[i] = BoneID;
+				m_Weights[i] = Weight;
+				return;
+			}
+		}
+	}
 };
 
 struct Texture {
@@ -42,57 +70,38 @@ struct Texture {
 };
 
 struct BoneInfo {
+	string mName;
 	glm::mat4 offset;
-	glm::mat4 FinalTransformation;
+	glm::mat4 finalTransformation;
 	BoneInfo()
 	{
+		mName = "";
 		offset = glm::mat4(1.0f);
-		FinalTransformation = glm::mat4(1.0f);
+		finalTransformation = glm::mat4(1.0f);
+	}
+	BoneInfo(aiBone* mBone)
+	{
+		mName = string(mBone->mName.data);
+
+		aiMatrix4x4 tp1 = mBone->mOffsetMatrix;
+		offset = glm::transpose(glm::make_mat4(&tp1.a1));
+
+		finalTransformation = glm::mat4(1.0f);
 	}
 };
 
-struct VertexWeight {
-	//vertex bone data
-	unsigned int BoneIDs[NUM_BONES_PER_VERTEX];
-	float Weights[NUM_BONES_PER_VERTEX];
-
-	VertexWeight()
-	{
-		Reset();
-	};
-
-	void Reset()
-	{
-		for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; ++i)
-		{
-			BoneIDs[i] = 0;
-			Weights[i] = 0;
-		}
-	}
-
-	void AddBoneData(unsigned int BoneID, float Weight)
-	{
-		for (unsigned int i = 0; i < NUM_BONES_PER_VERTEX; i++) {
-			if (Weights[i] == 0.0) {
-				BoneIDs[i] = BoneID;
-				Weights[i] = Weight;
-				return;
-			}
-		}
-	}
-};
 
 class Mesh {
 public:
-	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<unsigned int> indices;
-	vector<Texture> textures;
 
-
+	vector<BoneInfo> bones;
 	// constructor
-	Mesh(aiMesh* mesh, const aiScene* scene, vector<Texture>& textures_loaded,string directory) {
+	Mesh(aiMesh* mesh, const aiScene* scene, vector<Texture>& textures_loaded, string directory) {
 
+
+		//mVertices mNormals mTextureCoords 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex vertex;
@@ -124,7 +133,7 @@ public:
 			vertices.push_back(vertex);
 		}
 
-		//retreive indices
+		//mFaces
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace face = mesh->mFaces[i];
@@ -132,22 +141,21 @@ public:
 				indices.push_back(face.mIndices[j]);
 		}
 
-		if (mesh->mMaterialIndex >= 0)
-		{
-			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		//mBones
+		for (unsigned int i = 0; i < mesh->mNumBones; i++) {
+			aiBone* mBone = mesh->mBones[i];
+			BoneInfo boneInfo;
+			bones.push_back(BoneInfo(mBone));
 
-			// 1. diffuse maps Âþ·´ÉäÌùÍ¼
-			vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", textures_loaded, directory);
-			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-			// 2. specular maps ¾µÃæ¹âÌùÍ¼
-			vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular", textures_loaded, directory);
-			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-			// 3. normal maps
-			std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal", textures_loaded, directory);
-			textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-			// 4. height maps
-			std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height", textures_loaded, directory);
-			textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+			//add weight to vertices
+
+			for (unsigned int n = 0; n < mBone->mNumWeights; n++) {
+
+				float weight = mBone->mWeights[n].mWeight;
+				unsigned int vid = mBone->mWeights[n].mVertexId;
+				vertices[vid].AddBoneData(i, weight);
+				//VertexBoneData[vid].AddBoneData(BoneIndex, weight);
+			}
 		}
 	}
 
@@ -157,56 +165,29 @@ public:
 		if (!drawInit) {
 			initDraw();
 		}
-		// bind appropriate textures
-		unsigned int diffuseNr = 1;
-		unsigned int specularNr = 1;
-		unsigned int normalNr = 1;
-		unsigned int heightNr = 1;
-		for (unsigned int i = 0; i < textures.size(); i++)
-		{
-			glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
-											  // retrieve texture number (the N in diffuse_textureN)
-			string number;
-			string name = textures[i].type;
-			if (name == "texture_diffuse")
-				number = std::to_string(diffuseNr++);
-			else if (name == "texture_specular")
-				number = std::to_string(specularNr++); // transfer unsigned int to stream
-			else if (name == "texture_normal")
-				number = std::to_string(normalNr++); // transfer unsigned int to stream
-			else if (name == "texture_height")
-				number = std::to_string(heightNr++); // transfer unsigned int to stream
-
-			// now set the sampler to the correct texture unit
-			glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
-			// and finally bind the texture
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);
-		}
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		// always good practice to set everything back to defaults once configured.
-		glActiveTexture(GL_TEXTURE0);
 	}
 
 private:
 	/*  Render data  */
-	unsigned int VAO, vertexData_vbo, EBO, vertexBones_vbo;
+	unsigned int VAO, VBO, EBO;
 
 	bool drawInit = false;
 	void initDraw()
 	{
 		// create buffers/arrays
 		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &vertexData_vbo);
+		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
-		glGenBuffers(1, &vertexBones_vbo);
+
 
 		glBindVertexArray(VAO);
 		// load data into vertex buffers
-		glBindBuffer(GL_ARRAY_BUFFER, vertexData_vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		// A great thing about structs is that their memory layout is sequential for all its items.
 		// The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
 		// again translates to 3/2 floats which translates to a byte array.
@@ -233,18 +214,22 @@ private:
 		// vertex texture coords
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+		// vertex tangent
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+		// vertex bitangent
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+		// ids
+		glEnableVertexAttribArray(5);
+		glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
-		////BoneIDs
-		//glBindBuffer(GL_ARRAY_BUFFER, vertexBones_vbo);
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(VertexWeight) * vertexWeight.size(), &vertexWeight[0], GL_STATIC_DRAW);
-		//glEnableVertexAttribArray(3);
-		//glVertexAttribIPointer(3, 4, GL_INT, sizeof(VertexWeight), (const GLvoid*)0);//Int values only
+		// weights
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
 
-		////Weights
-		//glEnableVertexAttribArray(4);
-		//glVertexAttribPointer(4, NUM_BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(VertexWeight), (void*)offsetof(VertexWeight, Weights));
 
-		//glBindVertexArray(0);
+		glBindVertexArray(0);
 	}
 	unsigned int TextureFromFile(const char* path, const string& directory)
 	{
@@ -285,7 +270,7 @@ private:
 
 		return textureID;
 	}
-	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName, vector<Texture>& textures_loaded,string directory)
+	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName, vector<Texture>& textures_loaded, string directory)
 	{
 		vector<Texture> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)

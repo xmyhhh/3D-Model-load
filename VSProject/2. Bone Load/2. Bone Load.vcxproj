@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>./code/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,7 +141,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="code\include\Camera.h" />
-    <ClInclude Include="code\include\Lamp.h" />
     <ClInclude Include="code\include\Mesh.h" />
     <ClInclude Include="code\include\Model.h" />
     <ClInclude Include="code\include\Shader.h" />

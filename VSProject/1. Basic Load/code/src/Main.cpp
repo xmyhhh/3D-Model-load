@@ -4,7 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
-#include "Lamp.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -75,7 +75,7 @@ int main(void)
 
 	Shader modelShader("./code/shader/model.vs", "./code/shader/model.fs");
 
-	Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
+	//Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
 	//Model aModel("../../res/object/body/skinning_test_2.fbx");
