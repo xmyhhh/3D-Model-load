@@ -42,7 +42,7 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "2. Bone Load", NULL, NULL);
+	window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "3. Animation Load", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -117,10 +117,9 @@ int main(void)
 
 
 		//activate model shader
-
 		modelShader.use();
+		//projection transformation
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		// view/projection transformations
 		modelShader.setMat4("projection", projection);
 		glm::mat4 view = camera.GetViewMatrix();
 		modelShader.setMat4("view", view);
@@ -130,9 +129,19 @@ int main(void)
 		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
 		modelShader.setMat4("model", model);
 
-		//set uniforms for model shader
+		//view transformation
 		modelShader.setVec3("viewPos", camera.Position);
 
+		//deformation
+		aModel.PlayAnimation(*aModel.animations[0], animationTime, Transforms);
+
+		for (unsigned int i = 0; i < Transforms.size(); ++i)
+		{
+			const std::string name = "gBones[" + std::to_string(i) + "]";
+			GLuint boneTransform = glGetUniformLocation(modelShader.ID, name.c_str());
+			glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
+		}
+		std::cout << "draw" << std::endl;
 		aModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);

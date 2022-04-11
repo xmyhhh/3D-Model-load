@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2. Bone Load", "VSProject\2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Linear blend skinning", "VSProject\Linear blend skinning\Linear blend skinning.vcxproj", "{9E61370F-5731-4B0C-BC8F-0875898102DA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3. Animation Load", "VSProject\3. Animation Load\3. Animation Load.vcxproj", "{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x64.Build.0 = Release|x64
 		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x86.ActiveCfg = Release|Win32
 		{9E61370F-5731-4B0C-BC8F-0875898102DA}.Release|x86.Build.0 = Release|Win32
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Debug|x64.ActiveCfg = Debug|x64
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Debug|x64.Build.0 = Debug|x64
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Debug|x86.ActiveCfg = Debug|Win32
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Debug|x86.Build.0 = Debug|Win32
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Release|x64.ActiveCfg = Release|x64
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Release|x64.Build.0 = Release|x64
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Release|x86.ActiveCfg = Release|Win32
+		{52FAAC1A-6592-445C-BBFA-E9E10F1CE609}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

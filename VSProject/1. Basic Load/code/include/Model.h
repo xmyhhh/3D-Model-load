@@ -35,7 +35,7 @@ public:
 
 	Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
 	{
-		loadModel(path);
+		LoadModel(path);
 	}
 
 	// draws the model, and thus all its meshes
@@ -49,7 +49,7 @@ private:
 	const aiScene* scene;
 	Assimp::Importer importer;
 
-	void loadModel(string const& path)
+	void LoadModel(string const& path)
 	{
 		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		// check for errors
@@ -61,11 +61,11 @@ private:
 
 		directory = path.substr(0, path.find_last_of('/'));
 
-		processNode(scene->mRootNode, scene);
+		ProcessNode(scene->mRootNode, scene);
 	}
 
 
-	void processNode(aiNode* node, const aiScene* scene)
+	void ProcessNode(aiNode* node, const aiScene* scene)
 	{
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
@@ -75,7 +75,7 @@ private:
 		}
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			processNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene);
 		}
 
 	}

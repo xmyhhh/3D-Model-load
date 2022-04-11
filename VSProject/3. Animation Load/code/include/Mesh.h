@@ -98,7 +98,7 @@ public:
 
 	vector<BoneInfo> bones;
 	// constructor
-	Mesh(aiMesh* mesh, const aiScene* scene, vector<Texture>& textures_loaded, string directory) {
+	Mesh(aiMesh* mesh,   vector<Texture>& textures_loaded, string directory) {
 
 
 		//mVertices mNormals mTextureCoords 
@@ -157,6 +157,9 @@ public:
 				//VertexBoneData[vid].AddBoneData(BoneIndex, weight);
 			}
 		}
+
+
+		//mAnimation
 	}
 
 	// render the mesh
@@ -214,19 +217,19 @@ private:
 		// vertex texture coords
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
-		// vertex tangent
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
-		// vertex bitangent
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+		//// vertex tangent
+		//glEnableVertexAttribArray(3);
+		//glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+		//// vertex bitangent
+		//glEnableVertexAttribArray(4);
+		//glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 		// ids
-		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
 		// weights
-		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
 
 
 		glBindVertexArray(0);
