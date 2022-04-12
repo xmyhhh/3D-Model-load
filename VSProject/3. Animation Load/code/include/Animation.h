@@ -15,19 +15,13 @@ class Animation {
 
 public:
 	static	void SetBoneTransform(const aiAnimation& pAnimation, float AnimationTime, vector<Mesh>& meshes, const aiNode* pNode, const glm::mat4& ParentTransform) {
-
-
 		string NodeName(pNode->mName.data);
-
-
 		glm::mat4 NodeTransformation = glm::mat4(1.0f);
 
 		aiMatrix4x4 tp1 = pNode->mTransformation;
 		NodeTransformation = glm::transpose(glm::make_mat4(&tp1.a1));
 
-		const aiNodeAnim* pNodeAnim = nullptr;
-
-		pNodeAnim = get_aiNodeAnimBName(pAnimation, NodeName);    
+		const aiNodeAnim* pNodeAnim = get_aiNodeAnimBName(pAnimation, NodeName);    
 
 		if (pNodeAnim) {
 			//Interpolate scalling and generate scaling transformation matrix
@@ -59,7 +53,7 @@ public:
 		BoneInfo* boneInfo = nullptr;
 		boneInfo=get_BoneByName(meshes, NodeName);
 		if (boneInfo) {
-			boneInfo->finalTransformation = GlobalTransformation;
+			boneInfo->finalTransformation = GlobalTransformation* boneInfo->offset;
 		}
 
 		for (unsigned int i = 0; i < pNode->mNumChildren; i++) {

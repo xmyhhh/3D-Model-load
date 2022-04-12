@@ -323,8 +323,7 @@ private:
 		}
 	}
 
-	void ReadNodeHeirarchy(const aiScene* scene, float AnimationTime, const aiNode* pNode,
-		const glm::mat4& ParentTransform)
+	void ReadNodeHeirarchy(const aiScene* scene, float AnimationTime, const aiNode* pNode,const glm::mat4& ParentTransform)
 	{
 		string NodeName(pNode->mName.data);
 		const aiAnimation* pAnimation = scene->mAnimations[0];
@@ -333,8 +332,7 @@ private:
 		aiMatrix4x4 tp1 = pNode->mTransformation;
 		NodeTransformation = glm::transpose(glm::make_mat4(&tp1.a1));
 
-		const aiNodeAnim* pNodeAnim = nullptr;
-		pNodeAnim = Animations[pAnimation->mName.data][NodeName];
+		const aiNodeAnim* pNodeAnim = Animations[pAnimation->mName.data][NodeName];
 		if (pNodeAnim) {
 			//Interpolate scalling and generate scaling transformation matrix
 			aiVector3D Scaling;
