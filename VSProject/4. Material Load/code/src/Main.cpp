@@ -135,6 +135,7 @@ int main(void)
 		//deformation
 		aModel.PlayAnimation(*aModel.animations[0], animationTime);
 
+
 		//std::cout << "draw" << std::endl;
  		aModel.Draw(modelShader);
 
