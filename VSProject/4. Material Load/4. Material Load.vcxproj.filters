@@ -33,6 +33,9 @@
     <ClInclude Include="code\include\stb_image.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="code\include\Material.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="code\shader\model.fs">

@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="code\include\Animation.h" />
     <ClInclude Include="code\include\Camera.h" />
+    <ClInclude Include="code\include\Material.h" />
     <ClInclude Include="code\include\Mesh.h" />
     <ClInclude Include="code\include\Model.h" />
     <ClInclude Include="code\include\Shader.h" />

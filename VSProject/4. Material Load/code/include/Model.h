@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "Animation.h"
+#include "Material.h"
 
 #include <string>
 #include <fstream>
@@ -28,8 +29,9 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 class Model
 {
 public:
-	vector<Texture> textures_loaded;
+
 	vector<Mesh> meshes;
+	vector<Material> materials;
 	vector<aiAnimation*> animations;
 	string directory;
 	bool gammaCorrection;
@@ -57,6 +59,12 @@ public:
 
 			animations.push_back(pAnimation);
 		}
+
+		//Load material
+		for (int i = 0; i < scene->mNumMaterials; i++) {
+			materials.push_back(Material(scene->mMaterials[i],directory));
+		}
+
 
 
 		//init other data
@@ -102,7 +110,7 @@ private:
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
-			meshes.push_back(Mesh(mesh, textures_loaded, directory));
+			meshes.push_back(Mesh(mesh));
 		}
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{

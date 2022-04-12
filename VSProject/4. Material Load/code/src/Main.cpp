@@ -78,7 +78,8 @@ int main(void)
 	//Shader skeletonShader("./code/shader/skeleton.vs", "./code/shader/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
-	Model aModel("../../Resource/object/body/skinning_test_2.fbx");
+	//Model aModel("../../Resource/object/body/skinning_test_2.fbx");
+	Model aModel("../../Resource/object/backpack/backpack.obj");
 	//Model aModel("res/object/body/skinning_test.fbx");
 	//Model aModel("res/object/body/skinning_test_3.fbx");
 	//Model aModel("res/object/body/silly_dance.fbx");
@@ -133,7 +134,7 @@ int main(void)
 		modelShader.setVec3("viewPos", camera.Position);
 
 		//deformation
-		aModel.PlayAnimation(*aModel.animations[0], animationTime);
+		//aModel.PlayAnimation(*aModel.animations[0], animationTime);
 
 
 		//std::cout << "draw" << std::endl;
