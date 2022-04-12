@@ -26,7 +26,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-vector<glm::mat4> Transforms;
+
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 float animationTime = 0.0f;
@@ -133,16 +133,11 @@ int main(void)
 		modelShader.setVec3("viewPos", camera.Position);
 
 		//deformation
-		aModel.PlayAnimation(*aModel.animations[0], animationTime, Transforms);
+		aModel.PlayAnimation(*aModel.animations[0], animationTime);
 
-		for (unsigned int i = 0; i < Transforms.size(); ++i)
-		{
-			const std::string name = "gBones[" + std::to_string(i) + "]";
-			GLuint boneTransform = glGetUniformLocation(modelShader.ID, name.c_str());
-			glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(Transforms[i]));
-		}
-		std::cout << "draw" << std::endl;
-		aModel.Draw(modelShader);
+
+		//std::cout << "draw" << std::endl;
+ 		aModel.Draw(modelShader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

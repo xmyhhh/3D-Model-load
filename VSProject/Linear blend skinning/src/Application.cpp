@@ -79,13 +79,13 @@ int main(void)
 	Shader skeletonShader("res/shaders/skeleton.vs", "res/shaders/skeleton.fs");
 
 	//Model aModel("res/object/body/pedobear_animated.fbx");
-	//Model aModel("res/object/body/skinning_test_2.fbx");
+	Model aModel("res/object/body/skinning_test_2.fbx");
 	//Model aModel("res/object/body/skinning_test.fbx");
 	//Model aModel("res/object/body/skinning_test_3.fbx");
 	//Model aModel("res/object/body/silly_dance.fbx");
 	//Model aModel("res/object/body/Mannequin_Animation.fbx");
 	//Model aModel("res/object/body/turtle_texture.fbx");
-	Model aModel("res/object/cylinder/leafbone.fbx");
+	//Model aModel("res/object/cylinder/leafbone.fbx");
 	//Model aModel("res/object/body/groo.fbx");
 	//Model aModel("res/object/body/sk2_leafbone.fbx");
 

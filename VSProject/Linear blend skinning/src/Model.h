@@ -49,7 +49,7 @@ public:
 	vector<BoneInfo> m_BoneInfo;   //存储Bone的信息
 
 	map<string, map<string, const aiNodeAnim*>> Animations;
-	map<unsigned int, glm::vec3> skeleton_pose;
+
 
 
 	unsigned int NumVertices = 0;   //所有mesh的节点加起来的数量，用于绝对索引
@@ -80,7 +80,7 @@ public:
 		float TimeInTicks = TimeInSeconds * TicksPerSecond;
 		float AnimationTime = fmod(TimeInTicks, scene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime);
 
-		ReadNodeHeirarchy(scene, AnimationTime, scene->mRootNode, Identity, glm::vec3(0.0f, 0.0f, 0.0f));
+		ReadNodeHeirarchy(scene, AnimationTime, scene->mRootNode, Identity);
 
 		//debugSkeletonPose(skeleton_pose);
 
@@ -324,7 +324,7 @@ private:
 	}
 
 	void ReadNodeHeirarchy(const aiScene* scene, float AnimationTime, const aiNode* pNode,
-		const glm::mat4& ParentTransform, glm::vec3 startpos)
+		const glm::mat4& ParentTransform)
 	{
 		string NodeName(pNode->mName.data);
 		const aiAnimation* pAnimation = scene->mAnimations[0];
@@ -366,21 +366,13 @@ private:
 		unsigned int ID = 0;
 
 
-		if (Bone_Mapping.find(NodeName) != Bone_Mapping.end()) {
-			startpos.x = GlobalTransformation[3][0];
-			startpos.y = GlobalTransformation[3][1];
-			startpos.z = GlobalTransformation[3][2];
-			ID = Bone_Mapping[NodeName];
-			skeleton_pose[ID] = startpos;
-		}
-
 		//if we find the node in the bone_map
 		if (Bone_Mapping.find(NodeName) != Bone_Mapping.end()) {
 			unsigned int NodeIndex = Bone_Mapping[NodeName];
 			m_BoneInfo[NodeIndex].FinalTransformation = GlobalTransformation * m_BoneInfo[NodeIndex].offset;
 		}
 		for (unsigned int i = 0; i < pNode->mNumChildren; i++) {
-			ReadNodeHeirarchy(scene, AnimationTime, pNode->mChildren[i], GlobalTransformation, startpos);
+			ReadNodeHeirarchy(scene, AnimationTime, pNode->mChildren[i], GlobalTransformation);
 		}
 	}
 

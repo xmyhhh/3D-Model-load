@@ -97,8 +97,9 @@ public:
 	vector<unsigned int> indices;
 
 	vector<BoneInfo> bones;
+
 	// constructor
-	Mesh(aiMesh* mesh,   vector<Texture>& textures_loaded, string directory) {
+	Mesh(aiMesh* mesh, vector<Texture>& textures_loaded, string directory) {
 
 
 		//mVertices mNormals mTextureCoords 
@@ -148,13 +149,12 @@ public:
 			bones.push_back(BoneInfo(mBone));
 
 			//add weight to vertices
-
 			for (unsigned int n = 0; n < mBone->mNumWeights; n++) {
 
 				float weight = mBone->mWeights[n].mWeight;
 				unsigned int vid = mBone->mWeights[n].mVertexId;
 				vertices[vid].AddBoneData(i, weight);
-				//VertexBoneData[vid].AddBoneData(BoneIndex, weight);
+
 			}
 		}
 
@@ -168,11 +168,15 @@ public:
 		if (!drawInit) {
 			initDraw();
 		}
-
+		for (unsigned int i = 0; i < bones.size(); ++i)
+		{
+			const std::string name = "gBones[" + std::to_string(i) + "]";
+			GLuint boneTransform = glGetUniformLocation(shader.ID, name.c_str());
+			glUniformMatrix4fv(boneTransform, 1, GL_FALSE, glm::value_ptr(bones[i].finalTransformation));
+		}
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
 	}
 
 private:

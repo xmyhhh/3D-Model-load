@@ -76,9 +76,8 @@ public:
 			meshes[i].Draw(shader);
 	}
 
-	void PlayAnimation(aiAnimation& animation, float TimeInSeconds, vector<glm::mat4>& Transforms)
+	void PlayAnimation(aiAnimation& animation, float TimeInSeconds)
 	{
-		glm::mat4 Identity = glm::mat4(1.0f);
 
 		unsigned int numPosKeys = animation.mChannels[0]->mNumPositionKeys;
 
@@ -88,16 +87,8 @@ public:
 		float TimeInTicks = TimeInSeconds * TicksPerSecond;
 		float AnimationTime = fmod(TimeInTicks, scene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime);
 
-		Animation::SetBoneTransform(animation, AnimationTime, meshes, scene->mRootNode, Identity, glm::vec3(0.0f, 0.0f, 0.0f));  //修改 每个BoneInfo,需要把aiNode的层次关系传进去
+		Animation::SetBoneTransform(animation, AnimationTime, meshes, scene->mRootNode, glm::mat4(1.0f));  //修改 每个BoneInfo,需要把aiNode的层次关系传进去
 
-
-		//Transforms.resize(numTotalBones);
-		Transforms.clear();
-		for (unsigned int i = 0; i < meshes.size(); i++) {   //这个地方需要把整个model的所有bone都读取出来然后加载到shader
-			for (unsigned int j = 0; j < meshes[i].bones.size(); j++) {
-				Transforms.push_back(meshes[i].bones[j].finalTransformation);
-			}
-		}
 	}
 
 private:
@@ -119,9 +110,7 @@ private:
 		}
 	}
 
-	BoneInfo getAbsBone(unsigned int bid) {
 
-	}
 
 };
 

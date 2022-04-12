@@ -14,7 +14,7 @@ using std::map;
 class Animation {
 
 public:
-	static	void SetBoneTransform(const aiAnimation& pAnimation, float AnimationTime, vector<Mesh>& meshes, const aiNode* pNode, const glm::mat4& ParentTransform, const glm::vec3 startpos) {
+	static	void SetBoneTransform(const aiAnimation& pAnimation, float AnimationTime, vector<Mesh>& meshes, const aiNode* pNode, const glm::mat4& ParentTransform) {
 
 
 		string NodeName(pNode->mName.data);
@@ -27,7 +27,7 @@ public:
 
 		const aiNodeAnim* pNodeAnim = nullptr;
 
-		pNodeAnim = get_aiNodeAnimBName(pAnimation, NodeName);    //get NodeAnim 
+		pNodeAnim = get_aiNodeAnimBName(pAnimation, NodeName);    
 
 		if (pNodeAnim) {
 			//Interpolate scalling and generate scaling transformation matrix
@@ -63,7 +63,7 @@ public:
 		}
 
 		for (unsigned int i = 0; i < pNode->mNumChildren; i++) {
-			SetBoneTransform(pAnimation, AnimationTime, meshes,pNode->mChildren[i], GlobalTransformation, startpos);
+			SetBoneTransform(pAnimation, AnimationTime, meshes,pNode->mChildren[i], GlobalTransformation);
 		}
 	}
 private:
@@ -79,12 +79,11 @@ private:
 
 	static	BoneInfo* get_BoneByName(vector<Mesh>& meshes, string nodeName) {
 		for (unsigned int i = 0; i < meshes.size(); i++) {
-			for (unsigned int j = 0; j <= meshes.size(); j++) {
+			for (unsigned int j = 0; j < meshes[i].bones.size(); j++) {
 				if (meshes[i].bones[j].mName == nodeName) {
 					return &(meshes[i].bones[j]);
 				}
 			}
-
 		}
 		return NULL;
 	}
