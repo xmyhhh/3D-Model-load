@@ -1,5 +1,5 @@
 # 3D Model load with Assimp 
-This project contains sample code for loading 3D models using the openGL and Assim lib: it includes how to load meshes, bones, animations, materials from the aiSence data structure in Assimp
+This project contains sample code for loading 3D models using the openGL and Assimp: it includes how to load Meshe, Bone, Animation, Material from the aiSence data structure in Assimp
 
 ## Introduction
 Although [LearnOpenGL](https://learnopengl-cn.github.io/03%20Model%20Loading/01%20Assimp/) provides a sample code for loading 3D models using Assimp, it breaks the data structure of the original aiScene when loading. For example, it stores Bones directly in the Model class instead of the Mesh class, which is inconsistent with the design of aiScene. In my opinion , this is not good for people who want to learn Assimp data structure or want to load further complex 3D models.
