@@ -148,7 +148,6 @@
     <ClInclude Include="code\include\Mesh.h" />
     <ClInclude Include="code\include\Model.h" />
     <ClInclude Include="code\include\Shader.h" />
-    <ClInclude Include="code\include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="code\shader\model.fs" />

@@ -30,9 +30,6 @@
     <ClInclude Include="code\include\Shader.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="code\include\stb_image.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="code\include\Material.h">
       <Filter>include</Filter>
     </ClInclude>
