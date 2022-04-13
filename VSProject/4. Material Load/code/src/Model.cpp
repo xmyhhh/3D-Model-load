@@ -1,5 +1,3 @@
-#pragma once
-
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -80,7 +78,7 @@ void Model::PlayAnimation(aiAnimation& animation, float TimeInSeconds)
 	float TimeInTicks = TimeInSeconds * TicksPerSecond;
 	float AnimationTime = fmod(TimeInTicks, scene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime);
 
-	Animation::SetBoneTransform(animation, AnimationTime, meshes, scene->mRootNode, glm::mat4(1.0f));  //ÐÞ¸Ä Ã¿¸öBoneInfo,ÐèÒª°ÑaiNodeµÄ²ã´Î¹ØÏµ´«½øÈ¥
+	Animation::SetBoneTransform(animation, AnimationTime, meshes, scene->mRootNode, glm::mat4(1.0f));  //ï¿½Þ¸ï¿½ Ã¿ï¿½ï¿½BoneInfo,ï¿½ï¿½Òªï¿½ï¿½aiNodeï¿½Ä²ï¿½Î¹ï¿½Ïµï¿½ï¿½ï¿½ï¿½È¥
 
 }
 
@@ -90,7 +88,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
-		meshes.push_back(Mesh(mesh));
+		meshes.push_back(Mesh(mesh,this));
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{

@@ -5,6 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Shader.h"
 #include "Material.h"
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -86,7 +87,7 @@ struct BoneInfo {
 	}
 };
 
-
+class Model;
 class Mesh {
 public:
 	vector<Vertex> vertices;
@@ -95,7 +96,7 @@ public:
 	vector<BoneInfo> bones;
 
 	// constructor
-	Mesh(aiMesh* mesh);
+	Mesh(aiMesh* mesh, Model *pmodel);
 
 	// render the mesh
 	void Draw(Shader shader);
@@ -103,6 +104,7 @@ public:
 private:
 	/*  Render data  */
 	unsigned int VAO, VBO, EBO;
+	Model* pModel;
 
 	bool drawInit = false;
 	void initDraw();

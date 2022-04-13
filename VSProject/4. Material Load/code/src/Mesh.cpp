@@ -1,5 +1,3 @@
-#pragma once
-
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -19,11 +17,13 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "Mesh.h"
+
+#include "Model.h"
 using namespace std;
 
-Mesh::Mesh(aiMesh* mesh) {
+Mesh::Mesh(aiMesh* mesh, Model* _pmodel) {
 	//model pointer
-
+	pModel = _pmodel;
 
 	//mVertices mNormals mTextureCoords 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -177,15 +177,15 @@ void Mesh::Draw(Shader shader)
 
 
 	//texture_diffuse
-	//for (unsigned int i = 0; i < pModel->materials[materialIndex].diffuseMaps.size(); i++) {
-		//const std::string name = "diffuseMaps[" + std::to_string(i) + "]";
-		//	//std::to_string(i);
-		//	//glActiveTexture(GL_TEXTURE0 + i);
-		//	//// now set the sampler to the correct texture unit
-		//	//glUniform1i(glGetUniformLocation(shader.ID, name.c_str()), i);
-		//	//// and finally bind the texture
-		//	//glBindTexture(GL_TEXTURE_2D, pModel->materials[materialIndex].diffuseMaps[i].id);
-	//}
+	for (unsigned int i = 0; i < pModel->materials[materialIndex].diffuseMaps.size(); i++) {
+		const std::string name = "diffuseMaps[" + std::to_string(i) + "]";
+		//std::to_string(i);
+		//glActiveTexture(GL_TEXTURE0 + i);
+		//// now set the sampler to the correct texture unit
+		//glUniform1i(glGetUniformLocation(shader.ID, name.c_str()), i);
+		//// and finally bind the texture
+		//glBindTexture(GL_TEXTURE_2D, pModel->materials[materialIndex].diffuseMaps[i].id);
+	}
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -9,8 +9,12 @@
 #include <iostream>
 #include <map>
 #include <vector>
+
+#include "Mesh.h"
+
 using std::string;
 using std::map;
+
 class Animation {
 
 public:

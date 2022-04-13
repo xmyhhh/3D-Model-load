@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include "Shader.h"
-#include "Mesh.h"
+
 #include "Animation.h"
 #include "Material.h"
 
@@ -26,6 +26,7 @@ using std::string;
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
+class Mesh;
 class Model
 {
 public:
