@@ -20,17 +20,17 @@ void main() {
 
 	TexCoord = aTexCoords;
 	
-	mat4 BoneTransform = gBones[BoneIDs[0]] * Weights[0];
-	BoneTransform += gBones[BoneIDs[1]] * Weights[1];
-	BoneTransform += gBones[BoneIDs[2]] * Weights[2];
-	BoneTransform += gBones[BoneIDs[3]] * Weights[3];
+	//mat4 BoneTransform = gBones[BoneIDs[0]] * Weights[0];
+	//BoneTransform += gBones[BoneIDs[1]] * Weights[1];
+	//BoneTransform += gBones[BoneIDs[2]] * Weights[2];
+	//BoneTransform += gBones[BoneIDs[3]] * Weights[3];
 
-	vec4 pos = BoneTransform * vec4(aPos, 1.0);
-	
+	//vec4 pos = BoneTransform * vec4(aPos, 1.0);
+	vec4 pos =  vec4(aPos, 1.0);
 	gl_Position = projection * view * model * pos;
 
 	FragPos = vec3(model* pos);
-
-	Normal = mat3(transpose(inverse(BoneTransform))) * aNormal;
+	Normal =  aNormal;
+	//Normal = mat3(transpose(inverse(BoneTransform))) * aNormal;
 
 }

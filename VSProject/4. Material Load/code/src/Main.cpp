@@ -127,7 +127,7 @@ int main(void)
 
 		// world transformation
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
+		//model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// it's a bit too big for our scene, so scale it down
 		modelShader.setMat4("model", model);
 
 		//view transformation
