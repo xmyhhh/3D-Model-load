@@ -154,6 +154,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\src\Main.cpp" />
+    <ClCompile Include="code\src\Material.cpp" />
+    <ClCompile Include="code\src\Mesh.cpp" />
+    <ClCompile Include="code\src\Model.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,7 +9,7 @@
 #include "Mesh.h"
 #include "Animation.h"
 #include "Material.h"
-
+#include "Model.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -23,7 +23,7 @@
 
 using std::string;
 
-Model::Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
+Model::Model(string const& path, bool gamma ) : gammaCorrection(gamma)
 {
 	scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	// check for errors

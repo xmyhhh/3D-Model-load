@@ -38,85 +38,19 @@ public:
 	unsigned int numTotalBones; //整个场景的Bone数
 	unsigned int numTotalVetices; //整个场景的vertex数
 
-	Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
-	{
-		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-		// check for errors
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-		{
-			cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
-			return;
-		}
-
-		directory = path.substr(0, path.find_last_of('/'));
-
-		ProcessNode(scene->mRootNode, scene);
+	Model(string const& path, bool gamma = false);
 
 
-		//Load animations
-		for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
-			aiAnimation* pAnimation = scene->mAnimations[i];
+	void Draw(Shader shader);
 
-			animations.push_back(pAnimation);
-		}
-
-		//Load material
-		for (int i = 0; i < scene->mNumMaterials; i++) {
-			materials.push_back(Material(scene->mMaterials[i],directory));
-		}
-
-
-
-		//init other data
-		numTotalBones = 0;
-		numTotalVetices = 0;
-		for (int i = 0; i < meshes.size(); i++) {
-			numTotalBones += meshes[i].bones.size();
-			numTotalVetices += meshes[i].vertices.size();
-		}
-
-	}
-
-
-	void Draw(Shader shader)
-	{
-		for (unsigned int i = 0; i < meshes.size(); i++)
-			meshes[i].Draw(shader);
-	}
-
-	void PlayAnimation(aiAnimation& animation, float TimeInSeconds)
-	{
-
-		unsigned int numPosKeys = animation.mChannels[0]->mNumPositionKeys;
-
-		float TicksPerSecond = scene->mAnimations[0]->mTicksPerSecond != 0 ?
-			scene->mAnimations[0]->mTicksPerSecond : 25.0f;
-
-		float TimeInTicks = TimeInSeconds * TicksPerSecond;
-		float AnimationTime = fmod(TimeInTicks, scene->mAnimations[0]->mChannels[0]->mPositionKeys[numPosKeys - 1].mTime);
-
-		Animation::SetBoneTransform(animation, AnimationTime, meshes, scene->mRootNode, glm::mat4(1.0f));  //修改 每个BoneInfo,需要把aiNode的层次关系传进去
-
-	}
+	void PlayAnimation(aiAnimation& animation, float TimeInSeconds);
 
 private:
 	const aiScene* scene;
 	Assimp::Importer importer;
 
 
-	void ProcessNode(aiNode* node, const aiScene* scene)
-	{
-		for (unsigned int i = 0; i < node->mNumMeshes; i++)
-		{
-			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-			meshes.push_back(Mesh(mesh));
-		}
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
-		{
-			ProcessNode(node->mChildren[i], scene);
-		}
-	}
+	void ProcessNode(aiNode* node, const aiScene* scene);
 
 
 

@@ -49,5 +49,14 @@
     <ClCompile Include="code\src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="code\src\Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="code\src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="code\src\Material.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

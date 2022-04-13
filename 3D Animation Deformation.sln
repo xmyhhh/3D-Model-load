@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{931D34CC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4. Material Load", "VSProject\4. Material Load\4. Material Load.vcxproj", "{E14CFD4D-72D9-4904-8EB5-080A4A45DAB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project1", "Project1\Project1.vcxproj", "{6AEEAEEC-FBB6-4109-AEC2-C5B8E85E417A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project1", "VSProject\Project1\Project1.vcxproj", "{6AEEAEEC-FBB6-4109-AEC2-C5B8E85E417A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
